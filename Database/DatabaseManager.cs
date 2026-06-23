@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using Microsoft.Data.Sqlite;
+using HabitTracker.Models;
 
 namespace HabitTracker.Database;
+
 
 internal static class DatabaseManager
 {
@@ -12,7 +11,7 @@ internal static class DatabaseManager
     public static void Init() => Exec(
         """
         CREATE TABLE IF NOT EXISTS drinking_water (
-            Id INTEGER PRIMARY KEY AUTOINCREMENT,
+            Id INTEGER PRIMARY KEY,
             Date TEXT NOT NULL,
             Quantity INTEGER NOT NULL);
         """);
@@ -28,6 +27,16 @@ internal static class DatabaseManager
         "DELETE FROM drinking_water WHERE Id = @id;",
         ("@id", id));
 
+    public static bool Exists(int id)
+    {
+        using var connection = new SqliteConnection(ConnectionString);
+        connection.Open();
+        var cmd = connection.CreateCommand();
+        cmd.CommandText = "SELECT COUNT(1) FROM drinking_water WHERE Id = @id;";
+        cmd.Parameters.AddWithValue("@id", id);
+        return Convert.ToInt64(cmd.ExecuteScalar()) > 0;
+    }
+
     public static List<DrinkingWater> All()
     {
         using var connection = new SqliteConnection(ConnectionString);
@@ -41,7 +50,7 @@ internal static class DatabaseManager
         return rows;
     }
 
-    static void Exec(string sql, params (string name,object value)[] ps)
+    static void Exec(string sql, params (string name, object value)[] ps)
     {
         using var connection = new SqliteConnection(ConnectionString);
         connection.Open();

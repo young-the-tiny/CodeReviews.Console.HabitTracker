@@ -33,7 +33,6 @@ internal class UserInterface : BaseController, IBaseController
     public void ReadItem()
     {
         var records = DatabaseManager.All();
-        var recordsList = new List<(int Id, string Date, int Quantity)>();
 
         if (records.Count == 0)
         {
@@ -62,6 +61,12 @@ internal class UserInterface : BaseController, IBaseController
     public void UpdateItem()
     {
         var id = PromptId();
+        if (!DatabaseManager.Exists(id))
+        {
+            DisplayMessage($"No record with Id {id}.", "red");
+            return;
+        }
+
         var date = PromptDate();
         var quantity = PromptQuantity();
 
@@ -74,6 +79,11 @@ internal class UserInterface : BaseController, IBaseController
     public void DeleteItem()
     {
         var id = PromptId();
+        if (!DatabaseManager.Exists(id))
+        {
+            DisplayMessage($"No record with Id {id}.", "red");
+            return;
+        }
 
         ConfirmAction("delete record", () =>
         {
@@ -99,4 +109,3 @@ internal class UserInterface : BaseController, IBaseController
                     ? ValidationResult.Success()
                     : ValidationResult.Error("[red]Quantity must be greater than 0[/]")));
 }
-

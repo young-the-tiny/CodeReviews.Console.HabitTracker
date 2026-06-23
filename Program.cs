@@ -1,19 +1,13 @@
-﻿using Microsoft.Data.Sqlite;
+﻿using HabitTracker.Database;
+using HabitTracker.UI;
 
-string connectionString = @"Data Source=habit-Tracker.db";
+namespace HabitTracker;
 
-using (var connection = new SqliteConnection(connectionString))
+class Program
 {
-    connection.Open();
-    var command = connection.CreateCommand();
-    command.CommandText =
-    @"
-        CREATE TABLE IF NOT EXISTS drinking_water (
-            Id INTEGER PRIMARY KEY AUTOINCREMENT,
-            Date TEXT NOT NULL,
-            Quantity INTEGER NOT NULL
-        );
-    ";
-    command.ExecuteNonQuery();
-    connection.Close();
+    static void Main(string[] args)
+    {
+        DatabaseManager.Init();
+        new UserInterface().Run();
+    }
 }
