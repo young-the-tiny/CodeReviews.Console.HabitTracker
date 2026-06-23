@@ -1,8 +1,7 @@
 {
   "profiles": {
     "HabitTracker": {
-      "commandName": "Project",
-      "workingDirectory": "D:\\Senior\\CSharp\\ConsoleApp\\HabitTracker"
+      "commandName": "Project"
     }
   }
 }
